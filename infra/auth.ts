@@ -13,6 +13,6 @@ export const auth = new sst.aws.Auth("AuthServer", {
       dns: sst.aws.dns({
         zone: process.env.ZONE,
       }),
-      cert: process.env.DEFAULT_REGION_CERT, 
+      cert: process.env.CDN_CERT, 
     },  
   });

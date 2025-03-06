@@ -5,11 +5,19 @@
 
 declare module "sst" {
   export interface Resource {
+    "AuthServer": {
+      "type": "sst.aws.Auth"
+      "url": string
+    }
     "Frontend": {
       "type": "sst.aws.SvelteKit"
       "url": string
     }
     "GithubClientID": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "GithubClientSecret": {
       "type": "sst.sst.Secret"
       "value": string
     }
