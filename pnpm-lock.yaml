@@ -112,6 +112,9 @@ importers:
       svelte-check:
         specifier: ^4.0.0
         version: 4.1.4(svelte@5.22.5)(typescript@5.8.2)
+      svelte-kit-sst:
+        specifier: '2'
+        version: 2.43.5
       typescript:
         specifier: ^5.0.0
         version: 5.8.2
@@ -3164,6 +3167,10 @@ packages:
       postcss-scss: 4.0.9(postcss@8.5.3)
       postcss-selector-parser: 7.1.0
       svelte: 5.22.5
+    dev: true
+
+  /svelte-kit-sst@2.43.5:
+    resolution: {integrity: sha512-tvWj/YiPCL3scFcHo/RSYZWtXIuX6g6Mib4MXmDw0JrOtZHzqOCG4kWstTbjnWH4i4XyLPPvxrgSkm35muj4uw==}
     dev: true
 
   /svelte@5.22.5:

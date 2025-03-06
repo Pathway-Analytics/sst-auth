@@ -1,6 +1,22 @@
 # sst-auth #
 
-template for a SvelteKit frontend with openauth implemented with SST
+A minimal SST v3 application with SvelteKit, DynamoDB, and OpenAuth for authentication.
+
+## Features ##
+
+- **Frontend**: SvelteKit with TypeScript
+- **Backend**: SST v3 monorepo
+- **Database**: DynamoDB for user attributes (email, name, id)
+- **Auth**: OpenAuth with Google, GitHub, and Code issuers
+
+## Setup ##
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/Pathway-Analytics/sst-auth.git
+cd sst-auth
+```
 
 ## Create an .env file in the project root with the following envvars ##
 
@@ -39,3 +55,7 @@ Open it and it to Keychain and apply trust
 ```bash
 open ./packages/web/certs/cert.pem
 ```
+
+## Connect to your user database ##
+
+Update function getUser in /packages/functions/src/auth/auth.ts to connect to your user db

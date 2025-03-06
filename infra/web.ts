@@ -13,6 +13,8 @@ export function web({ auth }: { auth: sst.aws.Auth }) {
       environment: {
         AUTH_URL: auth.url,
         VITE_AUTH_URL: auth.url,
+        VITE_DOMAIN: process.env.DOMAIN || "localhost",
+        // VITE_API_URL: api.url, // Injects API_URL into frontend if api it is passed in to the function web({ api})
       },
     });
   
