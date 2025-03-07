@@ -1,17 +1,17 @@
 {
-    "name": "@sst-auth/functions",
-    "version": "1.0.0",
-    "type": "module",
-    "dependencies": {
-      "@openauthjs/openauth": "^0.4.0",
-      "aws-sdk": "^2.1692.0",
-      "hono": "^4.7.2",
-      "sst": "^3.0.0",
-      "valibot": "1.0.0-rc.2"
-    },
-    "devDependencies": {
-      "@types/aws-lambda": "^8",
-      "tsx": "^4.x.x"
-    }
+  "name": "@sst-auth/functions",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@openauthjs/openauth": "^0.4.0",
+    "aws-sdk": "^2.1692.0",
+    "hono": "^4.7.2",
+    "sst": "^3.0.0",
+    "valibot": "1.0.0-rc.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8",
+    "@types/node": "^22.13.9",
+    "tsx": "^4.x.x"
   }
-  
+}

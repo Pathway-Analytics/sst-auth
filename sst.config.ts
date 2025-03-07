@@ -3,15 +3,22 @@
 export default $config({
   app(input) {
     return {
+      defaultTags: {
+        tags: {
+          project: `sst-auth`,
+          AppManagerCFNStackKey: `sst-auth-${input?.stage}`,
+        },
+      },
       name: "sst-auth",
       removal: input?.stage === "production" ? "retain" : "remove",
       protect: ["production"].includes(input?.stage),
       home: "aws",
-      region: process.env.DEFAULT_REGION,
+      // region: process.env.DEFAULT_REGION || "us-east-1",
+      region: "us-east-1",
     };
   },
   async run() {
-    const { 
+    const {
       usersTable, 
       googleSecrets, 
       githubSecrets 

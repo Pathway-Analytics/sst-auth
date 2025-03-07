@@ -1,20 +1,23 @@
 import { handle } from "hono/aws-lambda";
 import { Hono } from "hono";
 import { issuer } from "@openauthjs/openauth/issuer";
+import { DynamoStorage } from "@openauthjs/openauth/storage/dynamo";
 import { MemoryStorage } from "@openauthjs/openauth/storage/memory";
 import { GoogleProvider } from "@openauthjs/openauth/provider/google";
 import { GithubProvider } from "@openauthjs/openauth/provider/github";
 import { CodeProvider } from "@openauthjs/openauth/provider/code";
 import { CodeUI } from "@openauthjs/openauth/ui/code";
+import { Select } from "@openauthjs/openauth/ui/select";
+import { Theme } from "@openauthjs/openauth/ui/theme";
 import { Resource } from "sst";
-import { DynamoDB } from "aws-sdk";
+import { DynamoDB, SES } from "aws-sdk";
 import { subjects } from "./subjects";
 
 const app = new Hono();
 const dynamoDb = new DynamoDB.DocumentClient();
 const usersTable = Resource.UsersTable.name;
 
-async function getUser(email: string) {
+async function getUser(emailAddress: string): Promise<string> {
   // Get user from database and return user ID
   return "123";
 }
@@ -34,10 +37,16 @@ interface AuthValue {
   tokenset: TokenSet;
   clientID: string;
 }
+const domain = process.env.DOMAIN || "example.com";
+const region = process.env.REGION || "us-east-1";
+const ses = new SES({ region });
 
 const authApp = issuer({
   subjects,
-  storage: MemoryStorage(),
+  select: Select(),
+  storage: DynamoStorage({
+    table: usersTable
+  }) || MemoryStorage(),
   providers: {
     google: GoogleProvider({
       clientID: Resource.GoogleClientID.value,
@@ -49,12 +58,25 @@ const authApp = issuer({
       clientSecret: Resource.GithubClientSecret.value,
       scopes: ["read:user", "user:email"],
     }),
+    
     code: CodeProvider(
       CodeUI({
-        sendCode: async (email, code) => {
-          console.log(email, code);
+        sendCode: async (claims: Record<string, string>, code: string) => {
+                    
+          const params = {
+            Source: `auth@${domain}`, // Change this to your email
+            ReplyToAddresses: [`no-reply@${domain}`], // Change this to your email
+            Destination: { ToAddresses: [claims.email as string] },
+            Message: {
+              Subject: { Data: "Your Login Code" },
+              Body: { Text: { Data: `Your code is: ${code}` } },
+            },
+          };
+          const sendPromise = await ses.sendEmail(params).promise();
+          console.log(`Sent code ${code} to ${claims.email}`);
+          console
         },
-      })
+      }),
     ),
     // ... other providers
   },
@@ -96,7 +118,7 @@ const authApp = issuer({
       throw new Error(`Unsupported provider: ${value.provider}`);
     }
 
-    return ctx.subject("user", { userId: user.userId });
+    return ctx.subject("user", { id: user.userId });
   }
 });
 
@@ -106,6 +128,7 @@ app.get("/test", (c) => {
   console.log("App routes:", app.routes);
   return c.text("Auth server is running");
 });
+
 
 app.route("/", authApp);
 
