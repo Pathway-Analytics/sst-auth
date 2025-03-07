@@ -18,6 +18,7 @@ export default $config({
     };
   },
   async run() {
+   const { email }           = await import("./infra/email");
     const {
       usersTable, 
       googleSecrets, 
@@ -28,5 +29,6 @@ export default $config({
       web: webInstance, 
       frontendUrl 
     }                           = await import("./infra/web").then((module) => module.web({ auth }));
+    
   },
 });

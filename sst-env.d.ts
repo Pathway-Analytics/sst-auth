@@ -9,6 +9,11 @@ declare module "sst" {
       "type": "sst.aws.Auth"
       "url": string
     }
+    "EmailServer": {
+      "configSet": string
+      "sender": string
+      "type": "sst.aws.Email"
+    }
     "Frontend": {
       "type": "sst.aws.SvelteKit"
       "url": string

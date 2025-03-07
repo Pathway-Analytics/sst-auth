@@ -12,6 +12,8 @@ import { Theme } from "@openauthjs/openauth/ui/theme";
 import { Resource } from "sst";
 import { DynamoDB, SES } from "aws-sdk";
 import { subjects } from "./subjects";
+import { webcrypto } from "crypto";
+import { sendEmail } from "../email/sender";
 
 const app = new Hono();
 const dynamoDb = new DynamoDB.DocumentClient();
@@ -20,6 +22,12 @@ const usersTable = Resource.UsersTable.name;
 async function getUser(emailAddress: string): Promise<string> {
   // Get user from database and return user ID
   return "123";
+}
+
+// Ensure `crypto` is available globally for aws4fetch
+if (!globalThis.crypto) {
+  // Polyfill crypto with Node.js webcrypto
+  globalThis.crypto = webcrypto as any;
 }
 
 interface TokenSet {
@@ -39,7 +47,7 @@ interface AuthValue {
 }
 const domain = process.env.DOMAIN || "example.com";
 const region = process.env.REGION || "us-east-1";
-const ses = new SES({ region });
+const emailServer = Resource.EmailServer
 
 const authApp = issuer({
   subjects,
@@ -72,7 +80,10 @@ const authApp = issuer({
               Body: { Text: { Data: `Your code is: ${code}` } },
             },
           };
-          const sendPromise = await ses.sendEmail(params).promise();
+          const body = `Your code is: ${code}`;
+          const subject = "Pin code";
+          const to = claims.email as string;
+          await sendEmail(to, subject, body);
           console.log(`Sent code ${code} to ${claims.email}`);
           console
         },

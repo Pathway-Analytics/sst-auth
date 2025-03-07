@@ -1,5 +1,6 @@
 // infra/auth.ts
 import { usersTable, googleSecrets, githubSecrets } from "./storage";
+import { email } from "./email";
 
 const region = process.env.DEFAULT_REGION || "us-east-1" ;
 const domain = process.env.DOMAIN || "example.com" // Change this to your domain
@@ -14,7 +15,7 @@ export const auth = new sst.aws.Auth("AuthServer", {
         REGION: region ,
         DOMAIN: domain,
       },
-      link: [ usersTable, ...googleSecrets, ...githubSecrets], // Link DynamoDB table and Google secrets
+      link: [ email, usersTable, ...googleSecrets, ...githubSecrets], // Link DynamoDB table and Google secrets
     },
     domain: {
     // edit DOMAIN ZONE in .env to match your domain and zone
